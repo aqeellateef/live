@@ -2,60 +2,81 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منصة التطبيقات الذكية | Smart Apps Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشغل البث المزدوج الاحترافي</title>
     <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(18, 24, 38, 0.75);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --accent-gold: #f59e0b;
-            --accent-glow: rgba(245, 158, 11, 0.25);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --btn-tv-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            --btn-phone-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        }
-
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Cairo', sans-serif;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
-            color: var(--text-main);
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             min-height: 100vh;
-            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 10px;
+        .main-wrapper {
+            width: 100%;
+            max-width: 900px;
+            background: #111827;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
         }
 
-        /* حاوية الإعلانات */
+        /* تنسيق ملء الشاشة لمتصفح كروم وباقي المتصفحات */
+        .main-wrapper:fullscreen {
+            max-width: 100% !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #000;
+            padding: 0;
+        }
+        .main-wrapper:-webkit-full-screen {
+            max-width: 100% !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #000;
+            padding: 0;
+        }
+
+        .main-wrapper:fullscreen .video-container,
+        .main-wrapper:-webkit-full-screen .video-container {
+            flex-grow: 1;
+            height: auto;
+            padding-bottom: 0;
+        }
+
+        /* حاوية الإعلانات المدمجة */
         .ad-container {
+            width: 100%;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 15px;
-            margin-bottom: 25px;
             padding: 15px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            background: rgba(17, 24, 39, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -63,844 +84,291 @@
             overflow: hidden;
         }
 
-        /* شبكة التطبيقات (عمودين للتلفاز والشاشات الكبيرة) */
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+        .header-bar {
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        @media (max-width: 768px) {
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* شريط تليجرام الاحترافي الأنيق جداً */
-        .telegram-ticker {
-            position: relative;
-            background: linear-gradient(135deg, rgba(38, 161, 222, 0.15) 0%, rgba(38, 161, 222, 0.05) 100%);
-            border: 1px solid rgba(38, 161, 222, 0.3);
-            border-radius: 16px;
-            padding: 14px 20px;
-            margin-top: 10px;
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(38, 161, 222, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            grid-column: span 2;
+            gap: 10px;
         }
 
-        @media (max-width: 768px) {
-            .telegram-ticker {
-                grid-column: span 1;
-            }
-        }
-
-        .telegram-ticker:focus {
-            outline: none;
-            border-color: #ef4444;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.5), 0 12px 30px rgba(38, 161, 222, 0.3);
-        }
-
-        .telegram-ticker::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .telegram-ticker:hover::before {
-            transform: translateX(100%);
-        }
-
-        .telegram-ticker:hover {
-            transform: translateY(-3px);
-            border-color: rgba(38, 161, 222, 0.6);
-            box-shadow: 0 12px 30px rgba(38, 161, 222, 0.3);
-        }
-
-        .telegram-content {
+        .header-actions {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .telegram-icon-box {
-            width: 42px;
-            height: 42px;
-            background: #26a1de;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(38, 161, 222, 0.4);
-            flex-shrink: 0;
-            animation: pulse-tg 2s infinite;
-        }
-
-        .telegram-icon-box svg {
-            width: 22px;
-            height: 22px;
-            fill: #ffffff;
-        }
-
-        @keyframes pulse-tg {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(38, 161, 222, 0.5); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(38, 161, 222, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(38, 161, 222, 0); }
-        }
-
-        .telegram-text h3 {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 2px;
-        }
-
-        .telegram-text p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .telegram-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #26a1de;
+        .rotate-btn {
+            background: #374151;
             color: #ffffff;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 8px 16px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(38, 161, 222, 0.3);
-            transition: background 0.2s ease, transform 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .telegram-ticker:hover .telegram-action {
-            background: #1f8ac2;
-        }
-
-        /* هيدر الموقع الاحترافي */
-        .site-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 10px 20px 20px;
-        }
-
-        .site-header h1 {
-            font-size: 26px;
-            font-weight: 900;
-            color: var(--text-main);
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .site-header h1 span {
-            color: var(--accent-gold);
-        }
-
-        .site-header p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        /* بطاقة التطبيق بتصميم زجاجي عصري */
-        .app-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 0;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .app-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(245, 158, 11, 0.3);
-            box-shadow: 0 15px 35px -10px var(--accent-glow);
-        }
-
-        .app-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .app-icon {
-            width: 75px;
-            height: 75px;
-            border-radius: 16px;
-            object-fit: cover;
-            flex-shrink: 0;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .app-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .app-title-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-
-        .app-title {
-            color: var(--text-main);
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .app-badge {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-gold);
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .app-desc {
-            color: var(--text-muted);
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        /* حاوية الأزرار */
-        .app-buttons {
-            display: flex;
-            gap: 6px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 15px;
-        }
-
-        .btn {
-            flex: 1;
-            border: none;
-            padding: 10px 4px;
-            border-radius: 12px;
-            font-size: 10.5px;
-            font-weight: 700;
             cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 3px;
-            white-space: nowrap;
+            gap: 6px;
             transition: all 0.2s ease;
         }
 
-        .btn:focus, .telegram-ticker:focus {
-            outline: none !important;
-            border: 3px solid #ef4444 !important;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.4), 0 6px 20px rgba(239, 68, 68, 0.3) !important;
+        .rotate-btn:hover {
+            background: #4b5563;
             transform: scale(1.05);
-            z-index: 10;
         }
 
-        .btn-tv {
-            background: var(--btn-tv-gradient);
-            color: #0b0f19;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+            animation: pulse 2s infinite;
         }
 
-        .btn-tv:hover {
-            opacity: 0.95;
-            transform: scale(1.02);
-            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
-        .btn-phone {
-            background: var(--btn-phone-gradient);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* نسبة الأبعاد 16:9 */
+            height: 0;
+            background: #000;
         }
 
-        .btn-phone:hover {
-            opacity: 0.95;
-            transform: scale(1.02);
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
-        .btn-player {
-            background: #ffffff;
-            color: #000000;
-            border-radius: 12px;
-            border: 2px dashed #cccccc;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-player:hover {
-            background: #f1f5f9;
-            transform: scale(1.02);
-        }
-
-        /* حاوية الإعلانات في نهاية التطبيقات */
-        .bottom-ad-wrapper {
-            grid-column: span 2;
+        .telegram-bar {
+            background: linear-gradient(135deg, #0088cc, #0077b5);
+            padding: 14px 24px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
 
-        @media (max-width: 768px) {
-            .bottom-ad-wrapper {
-                grid-column: span 1;
-            }
+        .telegram-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-muted);
-            font-size: 12px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 20px;
-            grid-column: span 2;
+        .telegram-bar:hover::after {
+            left: 100%;
         }
-        
-        @media (max-width: 768px) {
-            .footer {
-                grid-column: span 1;
+
+        .telegram-bar:hover {
+            background: linear-gradient(135deg, #0099e6, #0088cc);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .telegram-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .telegram-icon {
+            width: 28px;
+            height: 28px;
+            fill: #ffffff;
+        }
+
+        .telegram-btn {
+            background: #ffffff;
+            color: #0088cc;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .telegram-bar:hover .telegram-btn {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .main-wrapper {
+                border-radius: 10px;
+            }
+            .header-bar, .telegram-bar {
+                padding: 12px 16px;
+            }
+            .telegram-info span {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div class="container">
+    <!-- تم حذف الإعلانات من هنا تماماً (لا يوجد شيء في البداية) -->
 
-        <!-- حاوية الإعلانات العلوية -->
-        <div class="ad-container">
-            <div>
-                <script src="https://pl30921537.profitableratecpmnetwork.com/92/82/07/9282070903eeb73e12b0393ea93ae10a.js"></script>
+    <!-- المشغل الأول (القناة الأولى) -->
+    <div class="main-wrapper" id="player1">
+        <div class="header-bar">
+            <div class="header-title">
+                <span>البث الأول</span>
             </div>
-            <div>
-                <script>
-                  atOptions = {
-                    'key' : 'bd2c57591f3a2ec65a2738353eb96972',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                  };
-                </script>
-                <script src="https://www.highperformanceformat.com/bd2c57591f3a2ec65a2738353eb96972/invoke.js"></script>
-            </div>
-            <div>
-                <script>
-                  atOptions = {
-                    'key' : '9e30190944cb252dc99faeba8cbb3b60',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                  };
-                </script>
-                <script src="https://www.highrevenueformat.com/9e30190944cb252dc99faeba8cbb3b60/invoke.js"></script>
+            <div class="header-actions">
+                <button class="rotate-btn" onclick="forceRotateChrome('player1')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    تكبير الشاشة
+                </button>
+                <div class="live-badge">مباشر</div>
             </div>
         </div>
 
-        <!-- ترويسة الموقع -->
-        <header class="site-header">
-            <h1>مكتبة <span>التطبيقات الذكية</span></h1>
-            <p>أحدث التطبيقات والمنصات الترفيهية المخصصة للشاشات الذكية والهواتف بجودة عالية</p>
-        </header>
+        <div class="video-container">
+            <iframe src="https://ok.ru/videoembed/15913067027981" 
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" 
+                    allowfullscreen="true">
+            </iframe>
+        </div>
+    </div>
 
-        <!-- بداية حاوية شبكة التطبيقات -->
-        <div class="apps-grid">
-
-            <!-- تطبيق Reezn TV -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://files.catbox.moe/2jzy8t.png" alt="Reezn TV" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">ريزن Reezn</h2>
-                            <span class="app-badge">تحديث 2.0.16🔥</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة أحدث الأفلام والمسلسلات والقنوات الرياضية بجودة عالية 🔻مهكر</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_2.0.16.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_2.0.16.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
+    <!-- المشغل الثاني (القناة الثانية الجديدة) -->
+    <div class="main-wrapper" id="player2">
+        <div class="header-bar">
+            <div class="header-title">
+                <span>البث الثاني</span>
             </div>
-
-            <!-- تطبيق Prime TV -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://files.catbox.moe/g2veeu.jpg" alt="Prime TV" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">Prime TV</h2>
-                            <span class="app-badge">تحديث 1.6.2 🔥</span>
-                        </div>
-                        <p class="app-desc">تطبيق برايم تيفي لمشاهدة أحدث الأفلام والمسلسلات والقنوات بجودة عالية للهاتف والتلفاز.🔻مهكر</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/PrimeTV.OTT_1.6.2.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/PrimeTV.OTT_1.6.2.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
+            <div class="header-actions">
+                <button class="rotate-btn" onclick="forceRotateChrome('player2')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    تكبير الشاشة
+                </button>
+                <div class="live-badge">مباشر</div>
             </div>
+        </div>
 
-            <!-- تطبيق جنرال Genral TV -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://domaincapital.com/ar/wp-content/uploads/2026/03/Genral-TV-512x435.jpg" alt="Genral TV" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title"> جنرال Genral TV </h2>
-                            <span class="app-badge">تحديث 2.19 🔥</span>
-                        </div>
-                        <p class="app-desc"> لمشاهدة مجموعة مميزة من القنوات والباقات الرياضية.🔻مهكر</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/GENRAL_2.19_TVBOX.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/GENRAL.TV_2.19.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
+        <div class="video-container">
+            <iframe src="https://ok.ru/videoembed/15921734688269?fromTime=1787420502" 
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" 
+                    allowfullscreen="true">
+            </iframe>
+        </div>
+    </div>
+
+    <!-- شريط التليجرام الموحد بالأسفل -->
+    <div class="main-wrapper" style="overflow: hidden;">
+        <a href="https://t.me/c1_x2" target="_blank" class="telegram-bar">
+            <div class="telegram-info">
+                <svg class="telegram-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.62 3.72-.53.36-1.01.54-1.44.53-.47-.02-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.05-.78 4.11-1.79 6.85-2.97 8.22-3.55 3.91-1.67 4.72-1.96 5.25-1.97.12 0 .39.03.56.17.14.12.18.28.2.45-.02.07-.02.13-.04.22z"/>
+                </svg>
+                <span>انضم إلينا على قناة التليجرام لمتابعة كل جديد</span>
             </div>
+            <div class="telegram-btn">انضم الآن</div>
+        </a>
+    </div>
 
-            <!-- تطبيق Oz tv -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://oz-tv.online/logo.svg" alt="Oz tv" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">Oz tv</h2>
-                            <span class="app-badge">تحديث 4.0.2</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة مجموعة مميزة من القنوات والباقات الرياضية ولمشاهدة الافلام والمسلسلات 🔻مهكر.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/OzTV_4.0.2.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/OzTV_4.0.2.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
+    <!-- حاوية الإعلانات الوسطى / السفلية -->
+    <div class="ad-container">
+        <div>
+            <script>
+              atOptions = {
+                'key' : 'bd2c57591f3a2ec65a2738353eb96972',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/bd2c57591f3a2ec65a2738353eb96972/invoke.js"></script>
+        </div>
+        <div>
+            <script>
+              atOptions = {
+                'key' : '9e30190944cb252dc99faeba8cbb3b60',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highrevenueformat.com/9e30190944cb252dc99faeba8cbb3b60/invoke.js"></script>
+        </div>
+        <div>
+            <script async="async" data-cfasync="false" src="https://pl30920798.profitableratecpmnetwork.com/c07889ed897ef30b06f561780f27dae9/invoke.js"></script>
+            <div id="container-c07889ed897ef30b06f561780f27dae9"></div>
+        </div>
+    </div>
 
-            <!-- تطبيق سينمانا -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://f.top4top.io/p_3777ni44a1.jpg" alt="سينمانا" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">سينمانا</h2>
-                            <span class="app-badge">الأكثر شهرة</span>
-                        </div>
-                        <p class="app-desc">المزود الأبرز لشبكات ايرثلنك والوطني، يضم مكتبة ضخمة ومتجددة باستمرار من أحدث الأفلام والمسلسلات والأنمي.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Cinemana.Leanback_4.5.10.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_5.3.3.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق MovieBox -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://l.top4top.io/p_3864fjkr31.jpg" alt="moviebox" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">MovieBox</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">من افضل المنصات الذي يضم جميع الافلام والمسلسلات العربية والتركية والاجنبية مدبلج ومترجم والانميات لجميع الشبكات.🔻مهكر</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/MovieBoxTV_1.1.5.0711.03.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/MovieBox_3.0.13.0325.03.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق سينما بوكس -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://f.top4top.io/p_3777lmy8i1.png" alt="سينما بوكس" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">سينما بوكس</h2>
-                            <span class="app-badge">عالي الأداء</span>
-                        </div>
-                        <p class="app-desc">مصمم خصيصاً لشبكات هرنز والجزيرة الوطني، يوفر تجربة مشاهدة فريدة لأضخم الأفلام والمسلسلات المدبلجة.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Cinemana.Leanback_4.5.10.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://play.google.com/store/apps/details?id=co.albox.cinema" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق شوفلي -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://files.catbox.moe/pz9uen.jpg" alt="شوفلي" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">شوفلي</h2>
-                            <span class="app-badge">عالي الأداء</span>
-                        </div>
-                        <p class="app-desc">مصمم خصيصاً لشبكات هرنز والجزيرة، يوفر تجربة مشاهدة فريدة لأضخم الأفلام والمسلسلات المدبلجة.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://www.shooflee.net/" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://www.shooflee.net/" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق شاشتي -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://h.top4top.io/p_3777vdnfx1.jpg" alt="شاشتي" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">شاشتي</h2>
-                            <span class="app-badge">موصى به</span>
-                        </div>
-                        <p class="app-desc">المنصة الرائدة التابعة لشبكة هالة سات والوطني، تجمع لك أروع المحتويات لمشاهدة الافلام والمسلسلات مترجمة وبجودة فائقة.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://apps.apple.com/sa/app/shashety/id1448378384" class="btn btn-phone">🍏 تحميل للأيفون</a>
-                    <a href="https://play.google.com/store/apps/details?id=net.halasat.tv" class="btn btn-phone">📱 تحميل للهاتف والتلفاز</a>
-                </div>
-            </div>
-
-            <!-- تطبيق CEE -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://h.top4top.io/p_37779a6k61.png" alt="CEE سي" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">Cee سي</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">التطبيق الشبيه لسينمانا بجميع محتوى الأفلام والمسلسلات والانميات على جميع الشبكات.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/CEE.Leanback_4.5.4.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_1.0.0.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق 1 iraq -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://raw.githubusercontent.com/iraqapps/tvapps/refs/heads/main/img/1_iraq_tv.png" alt="One iraq" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">one iraq</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة القنوات الرياضية والعربية</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/iraqapps/tvapps/raw/refs/heads/main/apps/1%20IRAQ%20TV%20_v4.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/iraqapps/tvapps/raw/refs/heads/main/apps/1%20IRAQ%20TV%20_v4.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق افلامي - Aflaame -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://l.top4top.io/p_3782ea2zm1.jpg" alt="افلامي- Aflaame" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">افلامي - Aflaame</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">تطبيق افلامي هو تطبيق مزود بشبكات الشمال نور البداية اذ يحتوي على جميع الافلام والمسلسلات مترجمة ومدبلجة والانميات</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://iraqapps.github.io/tvapps/apps/aflaametv.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://iraqapps.github.io/tvapps/apps/aflaametv.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق Vodu TV -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://raw.githubusercontent.com/iraqapps/tvapps/refs/heads/main/img/vodu.png" alt="Vodu TV" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">Vodu TV</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">تطبيق فودو هو تطبيق مزود في اكثر الشبكات بالعراق اذ يحتوي على جميع الافلام والمسلسلات مترجمة ومدبلجة والانميات</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://raw.githubusercontent.com/iraqapps/tvapps/refs/heads/main/apps/vodu_old_tv.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_7.1.7.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق SmartTube -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://img.utdstc.com/icon/b9f/977/b9f977832d162f1a9e65e2df6fb6a1ae352121073563b43e1837f8fbcf79601b:200" alt="SmartTube" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">SmartTube</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">تطبيق يوتيوب بدون تسجيل دخول</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/yuliskov/SmartTubeNext/releases/download/latest/smarttube_stable.apk" class="btn btn-tv" style="flex: unset; width: 100%;">📺 تحميل للتلفاز</a>
-                </div>
-            </div>
-
-            <!-- تطبيق سيمودراما -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://simo-drama.org/wp-content/uploads/2025/04/simo-drama-2025.png" alt="سيمودراما" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">سيمودراما</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة الأفلام والمسلسلات بجودات وسيرفرات مختلفة عديدة وباقات متنوعة مقسمة حسب الفئة 🔻مهكر</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_1.0.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_7.1.0.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق دراما لايف -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://f.top4top.io/p_3775b0jgu1.jpg" alt="دراما لايف" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">دراما لايف</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">تطبيق دراما لايف الرقم 01 لمشاهدة المباريات والقنوات والأفلام للهاتف والتلفاز أيضاً. يتضمن أكثر من 2000 قناة و1000 فيلم ومسلسل 🔻مهكر.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_13.0.3.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_13.0.3.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق ياسين تيفي -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://files.catbox.moe/8tw06u.jpg" alt="ياسين تيفي" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">ياسين تيفي</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">افضل تطبيق لمشاهدة المباريات بسيرفرات مدفوعة.بدون مشغل وبدون إعلانات. 🔻مهكر</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Yacine.TV_3.1.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Yacine.TV_3.1.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق الأحمد تيفي -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://files.catbox.moe/um7qyd.jpg" alt="الأحمد تيفي" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">الأحمد تيفي</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة مجموعة مميزة من القنوات والباقات الرياضية بجودات وسيرفرات مختلفة عديدة وباقات متنوعة مقسمة حسب الفئة.🔻مهكر</p>
-                    </div>
-                </div>
-                <div style="background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); padding: 10px 15px; border-radius: 8px; margin: 15px 0; text-align: center; color: #fff; font-size: 14px;">
-                    🔑 كود التفعيل: <span style="font-weight: bold; color: #4CAF50; letter-spacing: 1px;">1111</span>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Elahmad_3.2.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Elahmad_3.2.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق عالم الدراما -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://dramaworld.aflamilive.com/dist/images/dw.png" alt="عالم الدراما" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">عالم الدراما</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة جميع الافلام والمسلسلات العربية والاجنبية والتركية بسيرفرات كثيرة 🔻مهكر.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/TV_V4.2.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/_V4.2.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/DW.Player_1.4f.apk" class="btn btn-player">⚙️ تحميل المشغل</a>
-                </div>
-            </div>
-
-            <!-- تطبيق أوسكار -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://oscar-tv.com//img/applogo_320x320.webp" alt="Oscar TV" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">أوسكار تيفي Oscar</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة القنوات الرياضية ولمشاهدة جميع الافلام والمسلسلات العربية والاجنبية والتركية بسيرفرات كثيرة 🔻نسخه غير مهكره.</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://oscar-tv.com/download-tv" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://oscar-tv.com/download" class="btn btn-phone">📱 تحميل للهاتف</a>
-                    <a href="https://oscar-tv.com/tdm" class="btn btn-player">⚙️ تحميل المشغل</a>
-                </div>
-            </div>
-
-            <!-- تطبيق CineJoy -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://cinejoy.to/brand/logomark-white.svg" alt="CineJoy" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">CineJoy</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">لمشاهدة الافلام والمسلسلات 🔻مهكر .</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Cine.Joy_1.0.0.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/Cine.Joy_1.0.0.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- تطبيق Nord VPN -->
-            <div class="app-card">
-                <div class="app-header">
-                    <img src="https://cdn-ilajomp.nitrocdn.com/cCmbgPxOAquzlghujJULcniHonMpUSof/assets/images/optimized/rev-2074811/digitalnext.co.uk/wp-content/uploads/2024/05/NordVPN-image.png" alt="Nord VPN" class="app-icon">
-                    <div class="app-info">
-                        <div class="app-title-row">
-                            <h2 class="app-title">Nord VPN</h2>
-                            <span class="app-badge">تحديث مستمر</span>
-                        </div>
-                        <p class="app-desc">في بي ان VPN لتتغير اتصالك بالشبكة لكثير من الدول 🔻مهكر .</p>
-                    </div>
-                </div>
-                <div class="app-buttons">
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/NordVPN_6.30.1.apk" class="btn btn-tv">📺 تحميل للتلفاز</a>
-                    <a href="https://github.com/aqeellateef/apps404/releases/download/v1.0.0/NordVPN_6.30.1.apk" class="btn btn-phone">📱 تحميل للهاتف</a>
-                </div>
-            </div>
-
-            <!-- شريط تليجرام بعد تطبيق Nord VPN مباشرة -->
-            <a href="https://t.me/c1_x2" target="_blank" class="telegram-ticker">
-                <div class="telegram-content">
-                    <div class="telegram-icon-box">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.62 3.72-.53.36-1.01.54-1.44.53-.47-.01-1.38-.27-2.06-.49-.83-.27-1.49-.42-1.43-.89.03-.25.38-.51 1.06-.78 4.16-1.81 6.94-3.01 8.34-3.6 3.97-1.66 4.79-1.95 5.33-1.96.12 0 .38.03.55.17.14.12.18.28.2.4-.02.07-.02.13-.04.2z"/></svg>
-                    </div>
-                    <div class="telegram-text">
-                        <h3>انضم الآن لقناة تليجرام</h3>
-                        <p>تابع أحدث التحديثات والتطبيقات أول بأول</p>
-                    </div>
-                </div>
-                <div class="telegram-action">
-                    <span>انضم الآن</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                </div>
-            </a>
-
-            <!-- الإعلانات في نهاية القائمة -->
-            <div class="bottom-ad-wrapper">
-                <div>
-                    <script src="https://pl30921537.profitableratecpmnetwork.com/92/82/07/9282070903eeb73e12b0393ea93ae10a.js"></script>
-                </div>
-                <div>
-                    <script async="async" data-cfasync="false" src="https://pl30920798.profitableratecpmnetwork.com/c07889ed897ef30b06f561780f27dae9/invoke.js"></script>
-                    <div id="container-c07889ed897ef30b06f561780f27dae9"></div>
-                </div>
-            </div>
-
-            <!-- حقوق النشر -->
-            <footer class="footer">
-                <p>جميع الحقوق محفوظة © 2026 - قناة تطبيقات 404</p>
-            </footer>
-
-        </div> <!-- نهاية حاوية شبكة التطبيقات -->
-
+    <!-- الإعلان الأول الذي طلبته ليكون في الأخير تماماً -->
+    <div class="ad-container">
+        <div>
+            <script src="https://pl30921537.profitableratecpmnetwork.com/92/82/07/9282070903eeb73e12b0393ea93ae10a.js"></script>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('copy', function(e) {
-            e.preventDefault();
-        });
-        document.addEventListener('selectstart', function(e) {
-            e.preventDefault();
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'c' || e.key === 'C' || e.key === 's' || e.key === 'S'))) {
-                e.preventDefault();
+        function forceRotateChrome(wrapperId) {
+            const elem = document.getElementById(wrapperId);
+            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+            if (!isFullscreen) {
+                let requestFn = elem.requestFullscreen || elem.webkitRequestFullscreen;
+                if (requestFn) {
+                    requestFn.call(elem).then(() => {
+                        if (screen.orientation && screen.orientation.lock) {
+                            screen.orientation.lock('landscape').catch(() => {});
+                        }
+                    }).catch(() => {});
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
             }
-        });
+        }
     </script>
 </body>
 </html>
