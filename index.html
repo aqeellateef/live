@@ -1,349 +1,37 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>📺 العُبودي TV</title> 
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"> 
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
-
-<style>
-:root {
-  --primary: #4361ee;
-  --accent: #f72585;
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --blur: blur(16px);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body {
-  font-family: 'Cairo', sans-serif;
-  background: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%);
-  padding: 12px;
-  min-height: 100vh;
-  color: white;
-}
-
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
-
-.header { text-align: center; padding: 15px; margin-bottom: 12px; }
-.header h1 { font-size: 1.8rem; font-weight: 800; }
-.subtitle { color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; }
-.telegram-link {
-  margin-top: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #0088cc;
-  padding: 6px 14px;
-  border-radius: 10px;
-  color: white;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.player-section { margin-bottom: 15px; padding: 12px; display: none; }
-.player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-#artplayer-container { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; }
-.servers-container { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-.server-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Cairo';
-  font-size: 0.8rem;
-}
-.server-btn.active { background: var(--accent); border-color: var(--accent); }
-
-.categories-bar { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; padding: 8px 4px; margin-bottom: 15px; scrollbar-width: none; }
-.categories-bar::-webkit-scrollbar { display: none; }
-.cat-btn {
-  display: inline-block;
-  flex: 0 0 auto;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-family: 'Cairo';
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-.cat-btn.active { background: var(--accent); border-color: var(--accent); }
-
-.channels-section { padding: 12px; min-height: 200px; }
-.channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-.channel-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  padding: 16px 8px;
-  cursor: pointer;
-  text-align: center;
-  font-weight: 700;
-}
-.channel-card.active-stream { background: rgba(247, 37, 133, 0.3); border-color: var(--accent); }
-.close-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 4px 10px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; }
-.loading-text { text-align: center; padding: 30px; font-weight: 600; }
-</style>
-</head> 
-
-<body> 
-
-<header class="header glass-panel">
-  <h1>العُبودي TV</h1>
-  <div class="subtitle">بث مباشر فائق السرعة ومستقر</div>
-  <a href="https://t.me/stlaet1" class="telegram-link" target="_blank">
-    <span>تابعونا على التلكرام</span>
-  </a>
-</header> 
-
-<section id="player-container" class="player-section glass-panel">
-  <div class="player-header">
-    <h3 id="current-channel-title">اسم القناة</h3>
-    <button class="close-btn" onclick="closePlayer()">✕ إغلاق</button>
-  </div>
-  <div id="artplayer-container"></div>
-  <div class="servers-container" id="servers-list"></div>
-</section>
-
-<div class="categories-bar" id="categories-bar">
-  <div class="loading-text">جاري جلب الباقات...</div>
-</div>
-
-<section class="channels-section glass-panel">
-  <div class="channels-grid" id="channels">
-    <div class="loading-text" style="grid-column: 1 / -1;">اختر باقة لعرض القنوات</div>
-  </div>
-</section>
-
-<script>
-const PROXY_WORKER = "https://yacine-proxy.hsinnzaer5.workers.dev";
-let artInstance = null;
-let currentHls = null;
-
-async function fetchCategories() {
-  const catBar = document.getElementById("categories-bar");
-  try {
-    const res = await fetch(`${PROXY_WORKER}/api/categories`);
-    const data = await res.json();
-    const categories = Array.isArray(data) ? data : (data.categories || data.data || []);
-
-    if (categories.length === 0) throw new Error("لم يتم العثور على باقات");
-
-    catBar.innerHTML = "";
-    categories.forEach((cat, index) => {
-      const btn = document.createElement("button");
-      btn.className = `cat-btn ${index === 0 ? 'active' : ''}`;
-      btn.textContent = cat.name || cat.title || `باقة ${cat.id}`;
-      btn.onclick = () => {
-        document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        fetchChannels(cat.id);
-      };
-      catBar.appendChild(btn);
-    });
-
-    if (categories.length > 0) {
-      fetchChannels(categories[0].id);
-    }
-  } catch (err) {
-    catBar.innerHTML = `<div class="loading-text">⚠️ تعذر تحميل الأقسام: ${err.message}</div>`;
-  }
-}
-
-async function fetchChannels(categoryId) {
-  const grid = document.getElementById("channels");
-  grid.innerHTML = `<div class="loading-text" style="grid-column: 1 / -1;">جاري جلب قنوات الباقة...</div>`;
-
-  try {
-    const res = await fetch(`${PROXY_WORKER}/api/category/${categoryId}`);
-    const data = await res.json();
-    const channels = Array.isArray(data) ? data : (data.channels || data.data || []);
-
-    if (channels.length === 0) {
-      grid.innerHTML = `<div class="loading-text" style="grid-column: 1 / -1;">لا توجد قنوات متاحة في هذه الباقة</div>`;
-      return;
-    }
-
-    grid.innerHTML = "";
-    channels.forEach(ch => {
-      const card = document.createElement("div");
-      card.className = "channel-card";
-      card.textContent = ch.name || ch.title;
-      card.onclick = () => {
-        document.querySelectorAll(".channel-card").forEach(c => c.classList.remove("active-stream"));
-        card.classList.add("active-stream");
-        loadChannel(ch.id, ch.name || ch.title);
-      };
-      grid.appendChild(card);
-    });
-  } catch (err) {
-    grid.innerHTML = `<div class="loading-text" style="grid-column: 1 / -1;">⚠️ تعذر تحميل القنوات: ${err.message}</div>`;
-  }
-}
-
-async function loadChannel(channelId, channelName) {
-  const container = document.getElementById("player-container");
-  const title = document.getElementById("current-channel-title");
-  const serversDiv = document.getElementById("servers-list");
-
-  container.style.display = "block";
-  title.textContent = `جاري تجهيز سيرفرات: ${channelName}...`;
-  serversDiv.innerHTML = "";
-  container.scrollIntoView({ behavior: "smooth" });
-
-  try {
-    const res = await fetch(`${PROXY_WORKER}/api/channel/${channelId}`);
-    const data = await res.json();
-
-    let streamList = [];
-    if (Array.isArray(data)) {
-      streamList = data;
-    } else if (data.data && Array.isArray(data.data)) {
-      streamList = data.data;
-    } else if (data.url || data.stream_url) {
-      streamList = [{ name: "السيرفر الرئيسي", url: data.url || data.stream_url }];
-    }
-
-    if (streamList.length === 0) throw new Error("السيرفرات غير متوفرة حالياً");
-
-    title.textContent = `🔴 بث مباشر: ${channelName}`;
-
-    let defaultIndex = 0;
-    streamList.forEach((st, idx) => {
-      const name = (st.name || st.quality || '').toLowerCase();
-      if (name.includes('720') || name.includes('sd')) defaultIndex = idx;
-    });
-
-    streamList.forEach((st, idx) => {
-      const targetUrl = st.url || st.stream_url;
-      if (!targetUrl) return;
-
-      const btn = document.createElement("button");
-      btn.className = `server-btn ${idx === defaultIndex ? 'active' : ''}`;
-      btn.textContent = st.name || st.quality || `سيرفر ${idx + 1}`;
-      btn.onclick = () => {
-        document.querySelectorAll(".server-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        startArtPlayer(targetUrl);
-      };
-      serversDiv.appendChild(btn);
-    });
-
-    const firstUrl = streamList[defaultIndex].url || streamList[defaultIndex].stream_url;
-    if (firstUrl) startArtPlayer(firstUrl);
-
-  } catch (err) {
-    title.textContent = `خطأ: ${err.message}`;
-  }
-}
-
-function startArtPlayer(rawUrl) {
-  const proxiedStreamUrl = `${PROXY_WORKER}?stream=${encodeURIComponent(rawUrl)}`;
-
-  if (currentHls) {
-    currentHls.stopLoad();
-    currentHls.detachMedia();
-    currentHls.destroy();
-    currentHls = null;
-  }
-
-  if (artInstance) {
-    if (artInstance.video) {
-      artInstance.video.pause();
-      artInstance.video.removeAttribute('src');
-      artInstance.video.load();
-    }
-    artInstance.destroy(true);
-    artInstance = null;
-  }
-
-  const container = document.getElementById('artplayer-container');
-  container.innerHTML = "";
-
-  artInstance = new Artplayer({
-    container: '#artplayer-container',
-    url: proxiedStreamUrl,
-    type: 'm3u8',
-    isLive: true,
-    autoplay: true,
-    fullscreen: true,
-    fullscreenWeb: true,
-    playsInline: true,
-    customType: {
-      m3u8: function (video, url) {
-        if (Hls.isSupported()) {
-          const hls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: false,
-            liveSyncDurationCount: 3,
-            maxBufferLength: 8,
-            maxMaxBufferLength: 16
-          });
-
-          hls.loadSource(url);
-          hls.attachMedia(video);
-          currentHls = hls;
-
-          hls.on(Hls.Events.ERROR, function (event, data) {
-            if (data.fatal) {
-              if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-                hls.startLoad();
-              } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-                hls.recoverMediaError();
-              } else {
-                hls.destroy();
-              }
-            }
-          });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = url;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Viewer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
         }
-      },
-    },
-  });
-}
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
 
-function closePlayer() {
-  if (currentHls) {
-    currentHls.stopLoad();
-    currentHls.detachMedia();
-    currentHls.destroy();
-    currentHls = null;
-  }
-  if (artInstance) {
-    if (artInstance.video) {
-      artInstance.video.pause();
-      artInstance.video.removeAttribute('src');
-      artInstance.video.load();
-    }
-    artInstance.destroy(true);
-    artInstance = null;
-  }
-  document.getElementById("player-container").style.display = "none";
-  document.querySelectorAll(".channel-card").forEach(c => c.classList.remove("active-stream"));
-}
+    <script>
+        // الكود المشفر للرابط الجديد
+        const _0x4f8a = "aHR0cHM6Ly9jb2RldG9hcHAuYWkuc3R1ZGlv";
+        
+        // فك التشفير وإنشاء الإطار تلقائياً
+        const _0x9b2c = atob(_0x4f8a);
+        const _0x1e5f = document.createElement('iframe');
+        _0x1e5f.src = _0x9b2c;
+        _0x1e5f.setAttribute('allowfullscreen', 'true');
+        document.body.appendChild(_0x1e5f);
+    </script>
 
-document.addEventListener("DOMContentLoaded", fetchCategories);
-</script>
 </body>
 </html>
