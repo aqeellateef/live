@@ -1,81 +1,160 @@
-<!-- قسم سيرفرات البث المباشر -->
-<div style="max-width: 1200px; margin: 30px auto; padding: 20px; color: #fff; font-family: Arial, sans-serif;">
-    <h2 style="text-align: center; margin-bottom: 20px; color: #3b82f6;">📺 أقسام البث المباشر</h2>
-    
-    <!-- حاوية الأقسام -->
-    <div id="categories-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; justify-content: center; flex-wrap: wrap;">
-        <!-- سيتم تعبئة الأقسام تلقائياً هنا -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبس فيو - تطبيقات وشاشات ذكية</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #3b82f6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        #categories-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .cat-btn {
+            background: #1e293b;
+            color: #fff;
+            border: 1px solid #3b82f6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .cat-btn:hover {
+            background: #3b82f6;
+        }
+        #channels-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .channel-card {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .channel-card img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .channel-card h4 {
+            font-size: 14px;
+            margin: 10px 0;
+            color: #f8fafc;
+        }
+        .play-btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>مرحباً بك في أبس فيو</h1>
+        
+        <h2 style="margin-top: 40px;">📺 أقسام البث المباشر</h2>
+        
+        <!-- حاوية الأقسام -->
+        <div id="categories-container">
+            <p style="color: #94a3b8;">جاري تحميل الأقسام...</p>
+        </div>
+
+        <h3 id="category-title" style="border-bottom: 2px solid #3b82f6; padding-bottom: 8px; margin-top: 30px;">اختر قسماً لعرض القنوات</h3>
+        
+        <!-- حاوية القنوات -->
+        <div id="channels-container">
+            <!-- سيتم تعبئة القنوات هنا تلقائياً -->
+        </div>
     </div>
 
-    <h3 id="category-title" style="margin-top: 30px; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; text-align: right;">اختر قسماً لعرض القنوات</h3>
-    
-    <!-- حاوية القنوات -->
-    <div id="channels-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px;">
-        <!-- سيتم تعبئة القنوات تلقائياً هنا -->
-    </div>
-</div>
+    <script>
+        // استخدام رابط مباشر أو خدمة بديلة لجلب البيانات لتجنب مشاكل الـ Proxy
+        const API_BASE = "https://corsproxy.io/?http://ver3.yacinelive.com/api";
 
-<script>
-const PROXY_URL = "https://apps404.vercel.app/proxy.js"; // رابط مشروعك على Vercel
+        // جلب الأقسام
+        async function loadCategories() {
+            try {
+                const res = await fetch(`${API_BASE}/categories`);
+                const categories = await res.json();
+                const container = document.getElementById('categories-container');
+                container.innerHTML = '';
 
-// جلب الأقسام عند تحميل الصفحة
-async function loadCategories() {
-    try {
-        const res = await fetch(PROXY_URL);
-        const categories = await res.json();
-        const container = document.getElementById('categories-container');
-        container.innerHTML = '';
+                categories.forEach(cat => {
+                    const btn = document.createElement('button');
+                    btn.className = 'cat-btn';
+                    btn.innerText = cat.name || cat.title;
+                    btn.onclick = () => loadChannels(cat.id, cat.name || cat.title);
+                    container.appendChild(btn);
+                });
+            } catch (err) {
+                console.error("خطأ في جلب الأقسام:", err);
+                document.getElementById('categories-container').innerHTML = '<p style="color: #ef4444;">فشل في تحميل الأقسام، تحقق من الاتصال</p>';
+            }
+        }
 
-        categories.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.innerText = cat.name || cat.title;
-            btn.style.cssText = "background: #1e293b; color: #fff; border: 1px solid #3b82f6; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; white-space: nowrap;";
-            
-            btn.onmouseover = () => btn.style.background = '#3b82f6';
-            btn.onmouseout = () => btn.style.background = '#1e293b';
-            
-            btn.onclick = () => loadChannels(cat.id, cat.name || cat.title);
-            container.appendChild(btn);
-        });
-    } catch (err) {
-        console.error("خطأ في جلب الأقسام:", err);
-    }
-}
+        // جلب قنوات قسم معين
+        async function loadChannels(catId, catName) {
+            document.getElementById('category-title').innerText = `قنوات قسم: ${catName}`;
+            const container = document.getElementById('channels-container');
+            container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #94a3b8;">جاري تحميل القنوات...</p>';
 
-// جلب قنوات قسم معين
-async function loadChannels(catId, catName) {
-    document.getElementById('category-title').innerText = `قنوات قسم: ${catName}`;
-    const container = document.getElementById('channels-container');
-    container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #94a3b8;">جاري تحميل القنوات...</p>';
+            try {
+                const res = await fetch(`${API_BASE}/getChannelsByCategory/${catId}`);
+                const channels = await res.json();
+                container.innerHTML = '';
 
-    try {
-        const res = await fetch(`${PROXY_URL}?action=channels&cat=${catId}`);
-        const channels = await res.json();
-        container.innerHTML = '';
+                channels.forEach(ch => {
+                    const card = document.createElement('div');
+                    card.className = 'channel-card';
+                    card.innerHTML = `
+                        <img src="${ch.logo || 'https://via.placeholder.com/80'}" alt="${ch.name}">
+                        <h4>${ch.name}</h4>
+                        <button class="play-btn" onclick="playChannel('${ch.url}')">تشغيل البث</button>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                container.innerHTML = '<p style="text-align: center; color: #ef4444; grid-column: 1 / -1;">فشل في تحميل القنوات</p>';
+            }
+        }
 
-        channels.forEach(ch => {
-            const card = document.createElement('div');
-            card.style.cssText = "background: #1e293b; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #334155;";
-            
-            card.innerHTML = `
-                <img src="${ch.logo || 'https://via.placeholder.com/80'}" alt="${ch.name}" style="width: 70px; height: 70px; object-fit: contain; margin-bottom: 10px; border-radius: 8px;">
-                <h4 style="font-size: 14px; margin: 10px 0; color: #f8fafc;">${ch.name}</h4>
-                <button onclick="playChannel('${ch.url}')" style="background: #2563eb; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; width: 100%;">تشغيل البث</button>
-            `;
-            container.appendChild(card);
-        });
-    } catch (err) {
-        container.innerHTML = '<p style="text-align: center; color: #ef4444; grid-column: 1 / -1;">فشل في تحميل القنوات</p>';
-    }
-}
+        function playChannel(streamUrl) {
+            alert("رابط البث: " + streamUrl);
+        }
 
-// دالة تشغيل البث
-function playChannel(streamUrl) {
-    alert("رابط البث: " + streamUrl);
-    // يمكنك فتح مشغل الفيديو هنا لاحقاً
-}
-
-// تنفيذ جلب الأقسام أول ما يفتح الموقع
-loadCategories();
-</script>
-
+        loadCategories();
+    </script>
+</body>
+</html>
