@@ -100,12 +100,13 @@
     </div>
 
     <script>
-        const PROXY_URL = "/api/proxy";
+        // استخدام رابط مباشر أو خدمة بديلة لجلب البيانات لتجنب مشاكل الـ Proxy
+        const API_BASE = "https://corsproxy.io/?http://ver3.yacinelive.com/api";
 
         // جلب الأقسام
         async function loadCategories() {
             try {
-                const res = await fetch(PROXY_URL);
+                const res = await fetch(`${API_BASE}/categories`);
                 const categories = await res.json();
                 const container = document.getElementById('categories-container');
                 container.innerHTML = '';
@@ -119,7 +120,7 @@
                 });
             } catch (err) {
                 console.error("خطأ في جلب الأقسام:", err);
-                document.getElementById('categories-container').innerHTML = '<p style="color: #ef4444;">فشل في تحميل الأقسام</p>';
+                document.getElementById('categories-container').innerHTML = '<p style="color: #ef4444;">فشل في تحميل الأقسام، تحقق من الاتصال</p>';
             }
         }
 
@@ -130,7 +131,7 @@
             container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #94a3b8;">جاري تحميل القنوات...</p>';
 
             try {
-                const res = await fetch(`${PROXY_URL}?action=channels&cat=${catId}`);
+                const res = await fetch(`${API_BASE}/getChannelsByCategory/${catId}`);
                 const channels = await res.json();
                 container.innerHTML = '';
 
