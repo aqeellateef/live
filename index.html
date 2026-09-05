@@ -55,15 +55,6 @@
                 return false;
             }
         });
-
-        // كشف محاولات فتح أدوات المطورين وإعادة توجيه الصفحة أو إيقافها
-        setInterval(function() {
-            const widthThreshold = window.outerWidth - window.innerWidth > 160;
-            const heightThreshold = window.outerHeight - window.innerHeight > 160;
-            if (widthThreshold || heightThreshold) {
-                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>تم اكتشاف محاولة فحص الكود!</h1>";
-            }
-        }, 1000);
     </script>
 </body>
 </html>
