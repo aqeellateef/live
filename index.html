@@ -12,6 +12,10 @@
             height: 100%;
             overflow: hidden;
             background-color: #000;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         iframe {
             width: 100%;
@@ -22,39 +26,36 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- تم إضافة صلاحيات التدوير وملء الشاشة وخصائص الأمان للإطار -->
     <iframe id="secureFrame" src="" allow="fullscreen; autoplay; encrypted-media" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
 
     <script>
-        // تشفير الرابط الأساسي بطريقة Base64 لمنع قراءته مباشرة
-        // الرابط الأصلي: https://live-tv-116849026166.europe-west1.run.app
         const encodedUrl = "aHR0cHM6Ly9saXZlLXR2LTExNjg0OTAyNjE2Ni5ldXJvcGUtd2VzdDEucnVuLmFwcA==";
-        
-        // فك تشفير الرابط وتطبيقه برمجياً
         document.getElementById('secureFrame').src = atob(encodedUrl);
 
-        // منع استخدام زر الفأرة الأيمن
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode == 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || 
+                (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83 || e.keyCode == 80))
+            ) {
+                e.preventDefault();
+                return false;
+            }
         });
 
-        // منع اختصارات لوحة المفاتيح الخاصة بعرض المصدر وأدوات المطورين
-        document.addEventListener('keydown', function(e) {
-            // F12
-            if (e.keyCode == 123) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+Shift+I أو Ctrl+Shift+J أو Ctrl+U
-            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) {
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && e.keyCode == 85) {
-                e.preventDefault();
-                return false;
-            }
-        });
+        (function() {
+            const threshold = 160;
+            const checkDevTools = function() {
+                if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+                    document.body.innerHTML = '<div style="color:white; text-align:center; padding-top:20vh; font-family:sans-serif;"><h2>Access Denied</h2></div>';
+                }
+            };
+            setInterval(checkDevTools, 1000);
+        })();
+
+        document.addEventListener('dragstart', e => e.preventDefault());
     </script>
 </body>
 </html>
