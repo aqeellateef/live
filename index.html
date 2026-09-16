@@ -32,20 +32,26 @@
         const encodedUrl = "aHR0cHM6Ly9saXZlLXR2LTExNjg0OTAyNjE2Ni5ldXJvcGUtd2VzdDEucnVuLmFwcA==";
         document.getElementById('secureFrame').src = atob(encodedUrl);
 
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
 
-        document.addEventListener('keydown', function(e) {
-            const key = e.key.toLowerCase();
-            if (
-                e.keyCode == 123 || 
-                (e.ctrlKey && e.shiftKey && (key === 'i' || key === 'j' || key === 'c')) || 
-                (e.ctrlKey && (key === 'u' || key === 's' || key === 'p'))
-            ) {
+        window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
-        });
+            if (e.ctrlKey) {
+                const code = e.keyCode || e.which;
+                if (code === 85 || code === 83 || code === 73 || code === 74 || code === 67 || code === 80) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+        }, true);
 
         (function() {
             const threshold = 160;
@@ -57,7 +63,9 @@
             setInterval(checkDevTools, 1000);
         })();
 
-        document.addEventListener('dragstart', e => e.preventDefault());
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
     </script>
 </body>
 </html>
